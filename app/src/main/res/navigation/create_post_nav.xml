@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/create_post_nav" app:startDestination="@id/emptyFragment">
+    <fragment android:id="@+id/cameraFragment" android:name="no.alacho.something.fragments.CameraFragment"
+              android:label="CameraFragment"/>
+    <fragment android:id="@+id/emptyFragment" android:name="no.alacho.something.fragments.EmptyFragment"
+              android:label="EmptyFragment">
+        <action android:id="@+id/action_emptyFragment_to_cameraFragment" app:destination="@id/cameraFragment"/>
+    </fragment>
+</navigation>
