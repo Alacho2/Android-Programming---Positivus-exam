@@ -10,6 +10,9 @@ import androidx.navigation.Navigation
 import androidx.navigation.fragment.NavHostFragment.findNavController
 import kotlinx.android.synthetic.main.create_post_layout.*
 import no.alacho.something.R
+import android.widget.FrameLayout
+
+
 
 class CreatePostFragment : Fragment(), View.OnClickListener {
 

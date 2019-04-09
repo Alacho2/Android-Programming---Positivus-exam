@@ -39,7 +39,7 @@ class Posts : Fragment(), View.OnClickListener {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                if (s.isEmpty()) {
+                if (s.isEmpty() && searchBar.visibility == View.VISIBLE) {
                   Timer().schedule(timerTask {
                     activity!!.runOnUiThread {
                         searchBar.visibility = View.GONE

@@ -2,22 +2,17 @@ package no.alacho.something.fragments
 
 import android.Manifest
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.Matrix
-import android.graphics.Point
-import android.graphics.SurfaceTexture
+import android.graphics.*
 import android.hardware.camera2.*
 import android.os.Bundle
 import android.os.Environment
 import android.os.Handler
 import android.os.HandlerThread
 import android.util.Log
-import android.util.Size
 import android.view.*
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.camera_layout.*
-import kotlinx.android.synthetic.main.create_post_layout.*
 import no.alacho.something.R
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
@@ -26,27 +21,32 @@ import java.io.FileOutputStream
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
+import androidx.constraintlayout.widget.ConstraintLayout
+
 
 class CameraFragment : Fragment() {
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.camera_layout, container, false)
+
+  private lateinit var captureSession: CameraCaptureSession
+  private lateinit var captureRequestBuilder: CaptureRequest.Builder
+  private lateinit var galleryFolder: File
+
+  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    return inflater.inflate(R.layout.camera_layout, container, false)
+  }
+
+
+  private lateinit var cameraDevice: CameraDevice
+  private val deviceStateCallback = object : CameraDevice.StateCallback(){
+    override fun onOpened(camera: CameraDevice?) {
+      Log.d("OnOpened", "Camera device opened successful")
+      if(camera != null){
+        cameraDevice = camera
+        previewSession()
+      }
     }
-    private lateinit var captureSession: CameraCaptureSession
-    private lateinit var captureRequestBuilder: CaptureRequest.Builder
-    private lateinit var galleryFolder: File
 
-    private lateinit var cameraDevice: CameraDevice
-    private val deviceStateCallback = object : CameraDevice.StateCallback(){
-        override fun onOpened(camera: CameraDevice?) {
-            Log.d("OnOpened", "Camera device opened successful")
-            if(camera != null){
-                cameraDevice = camera
-                previewSession()
-            }
-        }
-
-        override fun onDisconnected(camera: CameraDevice) {
+    override fun onDisconnected(camera: CameraDevice) {
             Log.d("onDisconnected", "Camera device disconnected")
             camera?.close()
         }
@@ -65,13 +65,6 @@ class CameraFragment : Fragment() {
     }
 
     private fun previewSession(){
-      val display: Display = activity!!.windowManager.defaultDisplay
-      val point = Point()
-      val matrix = Matrix()
-      display.getSize(point)
-      matrix.setScale(1f, (point.x * 0.0016).toFloat())
-      display.getSize(point)
-      previewTextureView.setTransform(matrix)
       val surfaceTexture = previewTextureView.surfaceTexture
         surfaceTexture.setDefaultBufferSize(MAX_PREVIEW_WIDTH, MAX_PREVIEW_HEIGHT)
         val surface = Surface(surfaceTexture)
@@ -109,26 +102,26 @@ class CameraFragment : Fragment() {
     }
 
     private fun stopBackgroundThread(){
-        backgroundThread.quitSafely()
-        try {
-            backgroundThread.join()
-        } catch (e: InterruptedException) {
-            Log.e("Exception", e.toString())
-        }
+      backgroundThread.quitSafely()
+      try {
+        backgroundThread.join()
+      } catch (e: InterruptedException) {
+        Log.e("Exception", e.toString())
+      }
     }
 
     /*
      We try to be dynamical, in case we want to get more lenses in the future
      */
     private fun <T> cameraCharacteristics(cameraId: String, key: CameraCharacteristics.Key<T>): T {
-        val characteristics = cameraManager.getCameraCharacteristics(cameraId)
-        return when(key){
-            CameraCharacteristics.LENS_FACING -> characteristics.get(key)
-            CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP -> characteristics.get(key)
-            else -> {
-                throw IllegalArgumentException("Key is not recognized")
-            }
+      val characteristics = cameraManager.getCameraCharacteristics(cameraId)
+      return when(key){
+        CameraCharacteristics.LENS_FACING -> characteristics.get(key)
+        CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP -> characteristics.get(key)
+        else -> {
+          throw IllegalArgumentException("Key is not recognized")
         }
+      }
     }
 
     private fun cameraId(lens: Int) : String {
@@ -143,42 +136,36 @@ class CameraFragment : Fragment() {
     }
 
     private fun connectCamera(){
-        val deviceId = cameraId(CameraCharacteristics.LENS_FACING_BACK)
-        Log.d("Device ID", "Device ID: $deviceId")
-        try {
-            //We already check permission other places.
-            cameraManager.openCamera(deviceId, deviceStateCallback, backgroundHandler)
-        } catch (e: CameraAccessException) {
-            Log.e("Exception", e.toString())
-        } catch (e: InterruptedException) {
-            Log.d("Exception", "Open camera device interrupted while opened")
-        }
-    }
-
-    companion object {
-      const val REQUEST_CAMERA_PERMISSION = 100
-      const val REQUEST_WRITING_PERMISSION = 101
-      const val REQUEST_READING_PERMISSION = 102
-      const val MAX_PREVIEW_WIDTH = 720
-      const val MAX_PREVIEW_HEIGHT = 720
+      val deviceId = cameraId(CameraCharacteristics.LENS_FACING_BACK)
+      Log.d("Device ID", "Device ID: $deviceId")
+      try {
+        //We already check permission other places.
+        cameraManager.openCamera(deviceId, deviceStateCallback, backgroundHandler)
+      } catch (e: CameraAccessException) {
+        Log.e("Exception", e.toString())
+      } catch (e: InterruptedException) {
+        Log.d("Exception", "Open camera device interrupted while opened")
+      }
     }
 
     private val textureListener = object: TextureView.SurfaceTextureListener {
-        override fun onSurfaceTextureSizeChanged(surface: SurfaceTexture?, width: Int, height: Int) { }
+      override fun onSurfaceTextureSizeChanged(surface: SurfaceTexture?, width: Int, height: Int) { }
+      override fun onSurfaceTextureUpdated(surface: SurfaceTexture?) = Unit
+      override fun onSurfaceTextureDestroyed(surface: SurfaceTexture?) = true
 
-        override fun onSurfaceTextureUpdated(surface: SurfaceTexture?) = Unit
-
-
-
-        override fun onSurfaceTextureDestroyed(surface: SurfaceTexture?) = true
-
-
-        override fun onSurfaceTextureAvailable(surface: SurfaceTexture?, width: Int, height: Int) {
-            Log.d("Inside Surface Available", "$width $height")
-            openCamera()
-        }
-
+      override fun onSurfaceTextureAvailable(surface: SurfaceTexture?, width: Int, height: Int) {
+        Log.d("Inside Surface Available", "$width $height")
+        openCamera()
+      }
     }
+
+  companion object {
+    const val REQUEST_CAMERA_PERMISSION = 100
+    const val REQUEST_WRITING_PERMISSION = 101
+    const val REQUEST_READING_PERMISSION = 102
+    const val MAX_PREVIEW_WIDTH = 720
+    const val MAX_PREVIEW_HEIGHT = 720
+  }
 
     private fun openCamera() {
         Log.d("Hallo", "I'm in camera open")
@@ -281,7 +268,6 @@ class CameraFragment : Fragment() {
           it.setImageBitmap(previewTextureView.bitmap)
           it.visibility = View.VISIBLE
         }
-
         previewTextureView.bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputPhoto)
         Log.d("onTakeButtonClicked", "Image was created")
         } catch (ex: Exception){
