@@ -1,4 +1,4 @@
-package no.alacho.something.fragments
+package no.alacho.something
 
 class PermissionRequests {
     companion object {

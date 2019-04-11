@@ -1,4 +1,4 @@
-package no.alacho.something.fragments
+package no.alacho.something
 
 import android.util.Log
 import android.view.LayoutInflater
@@ -12,15 +12,16 @@ import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.api.net.FetchPlaceRequest
 import com.google.android.libraries.places.api.net.PlacesClient
 import kotlinx.android.synthetic.main.predict_item.view.*
-import no.alacho.something.R
 
 class AutoCompleteAdapter(var placesClient: PlacesClient, var mMap: GoogleMap, var callback: () -> Unit) : RecyclerView.Adapter<AutoCompleteAdapter.AutoCompleteHolder>() {
 
     var predictionList: List<AutocompletePrediction> = listOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AutoCompleteHolder {
-        return AutoCompleteHolder(LayoutInflater.from(parent.context)
-            .inflate(R.layout.predict_item, parent, false), placesClient, mMap, callback)
+        return AutoCompleteHolder(
+          LayoutInflater.from(parent.context)
+            .inflate(R.layout.predict_item, parent, false), placesClient, mMap, callback
+        )
     }
 
     override fun getItemCount(): Int {

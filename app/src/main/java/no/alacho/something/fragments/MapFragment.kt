@@ -3,7 +3,6 @@ package no.alacho.something.fragments
 import android.Manifest
 import android.content.Context
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -12,7 +11,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -25,6 +23,8 @@ import com.google.android.libraries.places.api.net.FetchPlaceRequest
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest
 import com.google.android.libraries.places.api.net.PlacesClient
 import kotlinx.android.synthetic.main.activity_maps.*
+import no.alacho.something.AutoCompleteAdapter
+import no.alacho.something.PermissionRequests
 import no.alacho.something.R
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
@@ -51,7 +51,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         if(activity!!.findViewById<RecyclerView>(R.id.autoCompleteRecycler).visibility == View.GONE){
           activity!!.findViewById<RecyclerView>(R.id.autoCompleteRecycler).visibility = View.VISIBLE
         }
-        findPrediction(search.text.toString())
+        runCode()
       }
     })
 
@@ -86,9 +86,9 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
   }
 
-  fun findPrediction(searchQuery: String){
+  fun findPrediction(){
     val request = FindAutocompletePredictionsRequest.builder()
-      .setQuery(searchQuery)
+      .setQuery(search.text.toString())
       .build()
 
     placesClient.findAutocompletePredictions(request).addOnSuccessListener { response ->
@@ -110,27 +110,12 @@ class MapFragment : Fragment(), OnMapReadyCallback {
   @AfterPermissionGranted(PermissionRequests.REQUEST_FINE_LOCATION_CODE)
   fun runCode(){
     if(EasyPermissions.hasPermissions(activity!!.applicationContext, Manifest.permission.ACCESS_FINE_LOCATION)){
-      findPrediction("Oslo")
+      findPrediction()
     } else {
       EasyPermissions.requestPermissions(this,
         "We wanna get your location",
         PermissionRequests.REQUEST_FINE_LOCATION_CODE,
         Manifest.permission.ACCESS_FINE_LOCATION)
     }
-  }
-
-  fun fetchPlace(placesClient: PlacesClient, mMap: GoogleMap, placeId: String): Place? {
-    val list = listOf(Place.Field.NAME, Place.Field.ADDRESS, Place.Field.LAT_LNG)
-    var place: Place? = null
-    val fetchPlaceRequest = FetchPlaceRequest.builder(placeId, list)
-      .build()
-
-    placesClient.fetchPlace(fetchPlaceRequest).addOnSuccessListener { resp ->
-      place = resp.place
-      mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(place?.latLng, 12f))
-    }.addOnFailureListener { err ->
-      Log.d("Error", err.toString())
-    }
-    return place
   }
 }
