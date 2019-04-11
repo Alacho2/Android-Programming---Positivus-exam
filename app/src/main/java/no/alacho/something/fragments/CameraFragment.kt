@@ -21,11 +21,9 @@ import java.io.FileOutputStream
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
-import androidx.constraintlayout.widget.ConstraintLayout
 
 
 class CameraFragment : Fragment() {
-
 
   private lateinit var captureSession: CameraCaptureSession
   private lateinit var captureRequestBuilder: CaptureRequest.Builder
