@@ -24,6 +24,7 @@ class CreatePostFragment : Fragment(), View.OnClickListener {
     super.onViewCreated(view, savedInstanceState)
     addPostBtn.setOnClickListener(this)
     cameraButton.setOnClickListener(this)
+    mapButton.setOnClickListener(this)
   }
 
   override fun onClick(v: View) {
@@ -33,11 +34,20 @@ class CreatePostFragment : Fragment(), View.OnClickListener {
       }
       R.id.cameraButton -> {
         val fragmentController = view?.findViewById<View>(R.id.fragment)
-        Navigation.findNavController(fragmentController!!).navigate(R.id.action_emptyFragment_to_cameraFragment)
+        Navigation.findNavController(fragmentController!!).navigate(R.id.cameraFragment)
         cameraButton.let {
-          it.isEnabled = false
           it.setColorFilter(Color.BLACK)
         }
+        mapButton.colorFilter = null
+      }
+      R.id.mapButton -> {
+        val fragmentController = view?.findViewById<View>(R.id.fragment)
+        Navigation.findNavController(fragmentController!!).navigate(R.id.mapFragment)
+        mapButton.let {
+          //it.isEnabled = false
+          it.setColorFilter(Color.BLACK)
+        }
+        cameraButton.colorFilter = null
       }
     }
   }

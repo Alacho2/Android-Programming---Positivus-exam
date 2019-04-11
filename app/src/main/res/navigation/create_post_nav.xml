@@ -7,5 +7,8 @@
     <fragment android:id="@+id/emptyFragment" android:name="no.alacho.something.fragments.EmptyFragment"
               android:label="EmptyFragment">
         <action android:id="@+id/action_emptyFragment_to_cameraFragment" app:destination="@id/cameraFragment"/>
+        <action android:id="@+id/action_emptyFragment_to_mapFragment" app:destination="@id/mapFragment"/>
     </fragment>
+    <fragment android:id="@+id/mapFragment" android:name="no.alacho.something.fragments.MapFragment"
+              android:label="MapFragment"/>
 </navigation>
