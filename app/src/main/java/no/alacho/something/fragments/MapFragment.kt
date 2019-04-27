@@ -119,7 +119,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
   val callback: () -> Unit = {
     activity!!.findViewById<RecyclerView>(R.id.autoCompleteRecycler).visibility = View.GONE
     activity!!.findViewById<EditText>(R.id.search).setText("")
-    //activity!!.findViewById<GoogleMap>(R.id.map).
   }
 
   private fun captureMap() {

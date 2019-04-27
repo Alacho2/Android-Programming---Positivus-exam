@@ -1,6 +1,5 @@
 package no.alacho.something
 
-import android.graphics.Camera
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -8,7 +7,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.libraries.places.api.model.AutocompletePrediction
 import com.google.android.libraries.places.api.model.Place
@@ -46,7 +44,7 @@ class AutoCompleteAdapter(var placesClient: PlacesClient, var mMap: GoogleMap, v
         }
 
         fun bindItem(prediction: AutocompletePrediction) {
-          view.textView.text = prediction.getPrimaryText(null)
+          view.descriptionTitle.text = prediction.getPrimaryText(null)
           placesId = prediction.placeId
         }
 
@@ -64,11 +62,9 @@ class AutoCompleteAdapter(var placesClient: PlacesClient, var mMap: GoogleMap, v
                     }
                     Place.Type.LOCALITY -> {
                       mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(place?.latLng, 12f))
-                        Log.d("Hallo", "Hei")
                     }
                     else -> {
                       mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(place?.latLng, 17f))
-                      Log.d("Hallo", "Ikke denne")
                     }
                   }
                 mMap.addMarker(MarkerOptions().position(place?.latLng!!))
