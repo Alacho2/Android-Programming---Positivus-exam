@@ -2,7 +2,9 @@ package no.alacho.something.fragments
 
 import android.Manifest
 import android.content.Context
+import android.graphics.Bitmap
 import android.os.Bundle
+import android.os.Environment
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -10,6 +12,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -28,6 +32,10 @@ import no.alacho.something.PermissionRequests
 import no.alacho.something.R
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
+import java.io.File
+import java.io.FileOutputStream
+import java.text.SimpleDateFormat
+import java.util.*
 
 class MapFragment : Fragment(), OnMapReadyCallback {
 
@@ -37,6 +45,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
   private lateinit var layoutManager: LinearLayoutManager
   private lateinit var adapter: AutoCompleteAdapter
   private lateinit var mapFragment: SupportMapFragment
+  private lateinit var galleryFolder: File
 
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
     val rootView = inflater.inflate(R.layout.activity_maps, container, false)
@@ -64,6 +73,9 @@ class MapFragment : Fragment(), OnMapReadyCallback {
       .findFragmentById(R.id.map) as SupportMapFragment
     mapFragment.getMapAsync(this)
     autoCompleteRecycler.layoutManager = layoutManager
+    mapCaptureBtn.setOnClickListener {
+      captureMap()
+    }
   }
 
   override fun onAttach(context: Context) {
@@ -79,6 +91,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     mMap = googleMap
     adapter = AutoCompleteAdapter(placesClient, mMap, callback)
     autoCompleteRecycler.adapter = adapter
+
   }
 
   override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -105,6 +118,17 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
   val callback: () -> Unit = {
     activity!!.findViewById<RecyclerView>(R.id.autoCompleteRecycler).visibility = View.GONE
+    activity!!.findViewById<EditText>(R.id.search).setText("")
+    //activity!!.findViewById<GoogleMap>(R.id.map).
+  }
+
+  private fun captureMap() {
+    mMap.snapshot { image ->
+      activity?.findViewById<ImageView>(R.id.takenImage)?.let {
+        it.setImageBitmap(image)
+        it.visibility = View.VISIBLE
+      }
+    }
   }
 
   @AfterPermissionGranted(PermissionRequests.REQUEST_FINE_LOCATION_CODE)
