@@ -57,18 +57,20 @@ class Posts : Fragment(), View.OnClickListener {
       }
     })
 
+    layoutManager = GridLayoutManager(view?.context, 2)
+    postRecycler.layoutManager = layoutManager
+    adapter = PostAdapter(view?.context)
+    postRecycler.adapter = adapter
+
+
     postViewModel = ViewModelProviders.of(this).get(PostViewModel::class.java)
-    postViewModel.allPosts.observe(this, Observer { words ->
-      words.forEach {
-        Log.d("Word attempt", it.toString())
-      }
+    postViewModel.allPosts.observe(this, Observer { posts ->
+      adapter.setPosts(posts)
+      /*words.forEach {
+
+
+      } */
     })
-
-    //layoutManager = GridLayoutManager(view?.context, 2)
-    //adapter = PostAdapter(view?.context)
-
-    //postRecycler.layoutManager = layoutManager
-    //postRecycler.adapter = adapter
   }
 
   override fun onClick(v: View) {
