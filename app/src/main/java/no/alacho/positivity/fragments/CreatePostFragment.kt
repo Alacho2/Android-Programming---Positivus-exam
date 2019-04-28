@@ -1,4 +1,4 @@
-package no.alacho.something.fragments
+package no.alacho.positivity.fragments
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -12,13 +12,11 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.NavHostFragment.findNavController
 import kotlinx.android.synthetic.main.create_post_layout.*
-import no.alacho.something.R
-import android.widget.FrameLayout
-import androidx.lifecycle.Observer
+import no.alacho.positivity.R
 import androidx.lifecycle.ViewModelProviders
-import kotlinx.android.synthetic.main.recyclerview_item.*
-import no.alacho.something.PostAdapter
-import no.alacho.something.room.Post
+import com.google.android.material.snackbar.Snackbar
+import no.alacho.positivity.PostAdapter
+import no.alacho.positivity.room.Post
 import java.io.ByteArrayOutputStream
 
 class CreatePostFragment : Fragment(), View.OnClickListener {
@@ -46,29 +44,30 @@ class CreatePostFragment : Fragment(), View.OnClickListener {
   override fun onClick(v: View) {
     when(v.id) {
       R.id.addPostBtn -> {
-        val baos = ByteArrayOutputStream()
-        if(takenImage.visibility == View.VISIBLE){
-          val bitmap = (takenImage.drawable as BitmapDrawable).bitmap
-          bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+        if(title.text.isNotEmpty()){
+          val baos = ByteArrayOutputStream()
+          if(takenImage.visibility == View.VISIBLE){
+            val bitmap = (takenImage.drawable as BitmapDrawable).bitmap
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+          }
+          postViewModel.insert(Post(0, title.text.toString(), baos.toByteArray()))
+          findNavController(this).popBackStack()
+        } else {
+          Snackbar
+            .make(activity!!.findViewById(R.id.constraintView), "You need a title", Snackbar.LENGTH_SHORT)
+            .show()
         }
-        postViewModel.insert(Post(0, title.text.toString(), baos.toByteArray()))
-        findNavController(this).popBackStack()
       }
       R.id.cameraButton -> {
         val fragmentController = view?.findViewById<View>(R.id.fragment)
         Navigation.findNavController(fragmentController!!).navigate(R.id.cameraFragment)
-        cameraButton.let {
-          it.setColorFilter(Color.BLACK)
-        }
+        cameraButton.setColorFilter(Color.BLACK)
         mapButton.colorFilter = null
       }
       R.id.mapButton -> {
         val fragmentController = view?.findViewById<View>(R.id.fragment)
         Navigation.findNavController(fragmentController!!).navigate(R.id.mapFragment)
-        mapButton.let {
-          //it.isEnabled = false
-          it.setColorFilter(Color.BLACK)
-        }
+        mapButton.setColorFilter(Color.BLACK)
         cameraButton.colorFilter = null
       }
     }

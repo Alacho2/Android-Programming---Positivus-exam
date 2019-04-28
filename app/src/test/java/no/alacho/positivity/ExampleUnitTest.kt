@@ -1,4 +1,4 @@
-package no.alacho.something
+package no.alacho.positivity
 
 import org.junit.Test
 

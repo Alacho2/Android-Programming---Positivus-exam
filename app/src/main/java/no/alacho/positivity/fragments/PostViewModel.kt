@@ -1,4 +1,4 @@
-package no.alacho.something.fragments
+package no.alacho.positivity.fragments
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
@@ -7,9 +7,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import no.alacho.something.room.Post
-import no.alacho.something.room.PostRepository
-import no.alacho.something.room.PostRoomDatabase
+import no.alacho.positivity.room.Post
+import no.alacho.positivity.room.PostRepository
+import no.alacho.positivity.room.PostRoomDatabase
 import kotlin.coroutines.CoroutineContext
 
 class PostViewModel(application: Application) : AndroidViewModel(application) {

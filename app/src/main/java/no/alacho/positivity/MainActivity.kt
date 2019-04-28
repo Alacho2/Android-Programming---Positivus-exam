@@ -1,4 +1,4 @@
-package no.alacho.something
+package no.alacho.positivity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

@@ -2,13 +2,13 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/create_post_nav" app:startDestination="@id/emptyFragment">
-    <fragment android:id="@+id/cameraFragment" android:name="no.alacho.something.fragments.CameraFragment"
+    <fragment android:id="@+id/cameraFragment" android:name="no.alacho.positivity.fragments.CameraFragment"
               android:label="CameraFragment"/>
-    <fragment android:id="@+id/emptyFragment" android:name="no.alacho.something.fragments.EmptyFragment"
+    <fragment android:id="@+id/emptyFragment" android:name="no.alacho.positivity.fragments.EmptyFragment"
               android:label="EmptyFragment">
         <action android:id="@+id/action_emptyFragment_to_cameraFragment" app:destination="@id/cameraFragment"/>
         <action android:id="@+id/action_emptyFragment_to_mapFragment" app:destination="@id/mapFragment"/>
     </fragment>
-    <fragment android:id="@+id/mapFragment" android:name="no.alacho.something.fragments.MapFragment"
+    <fragment android:id="@+id/mapFragment" android:name="no.alacho.positivity.fragments.MapFragment"
               android:label="MapFragment"/>
 </navigation>

@@ -1,4 +1,4 @@
-package no.alacho.something.fragments
+package no.alacho.positivity.fragments
 
 import android.content.Context
 import android.os.Bundle
@@ -12,15 +12,14 @@ import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.NavHostFragment.findNavController
-import androidx.recyclerview.widget.GridLayoutManager
-import no.alacho.something.PostAdapter
-import no.alacho.something.R
+import no.alacho.positivity.PostAdapter
+import no.alacho.positivity.R
 import java.util.*
 import kotlin.concurrent.timerTask
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import kotlinx.android.synthetic.main.recycler.*
-import no.alacho.something.room.Post
+import no.alacho.positivity.room.Post
 
 class Posts : Fragment(), View.OnClickListener {
   private lateinit var layoutManager: StaggeredGridLayoutManager
@@ -28,8 +27,6 @@ class Posts : Fragment(), View.OnClickListener {
   private lateinit var search: View
   private lateinit var postViewModel: PostViewModel
   private lateinit var postList: List<Post>
-
-
 
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
     return inflater.inflate(R.layout.recycler, container, false)
@@ -48,22 +45,25 @@ class Posts : Fragment(), View.OnClickListener {
 
         if(s.isNotEmpty()){
           val filterList = postList.filter {
-            it.name.contains(s)
+            it.name.contains(s, ignoreCase = true)
           }
           adapter.setPosts(filterList)
         }
 
         if (s.isEmpty() && searchBar.visibility == View.VISIBLE) {
           Timer().schedule(timerTask {
-            activity!!.runOnUiThread {
-              searchBar.visibility = View.GONE
-              search.visibility = View.VISIBLE
-              fab.show()
-              val imm = activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-              imm.hideSoftInputFromWindow(searchBar.windowToken, 0)
-              adapter.setPosts(postList)
+            if(s.isNotEmpty())this.cancel()
+            else {
+              activity!!.runOnUiThread {
+                searchBar.visibility = View.GONE
+                search.visibility = View.VISIBLE
+                fab.show()
+                val imm = activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(searchBar.windowToken, 0)
+                adapter.setPosts(postList)
+              }
             }
-          }, 2000)
+          }, 1500)
         }
       }
     })
@@ -76,7 +76,7 @@ class Posts : Fragment(), View.OnClickListener {
     postViewModel = ViewModelProviders.of(this).get(PostViewModel::class.java)
     postViewModel.allPosts.observe(this, Observer { posts ->
       postList = posts
-      adapter.setPosts(posts)
+      adapter.setPosts(postList)
     })
   }
 
@@ -100,5 +100,4 @@ class Posts : Fragment(), View.OnClickListener {
     val imm = activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
     imm.showSoftInput(searchBar, InputMethodManager.SHOW_IMPLICIT)
   }
-
 }

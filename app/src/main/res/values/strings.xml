@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">Something</string>
     <string name="search_your_positivity">Search</string>
+    <string name="camerabutton">cameraButton</string>
+    <string name="mapbutton">mapButton</string>
+    <string name="add_post">Add post</string>
+    <string name="create_a_post">Create a post</string>
+    <string name="make_a_memorable_title">Make a memorable title</string>
 </resources>

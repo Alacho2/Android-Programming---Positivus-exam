@@ -1,8 +1,7 @@
-package no.alacho.something.room
+package no.alacho.positivity.room
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 

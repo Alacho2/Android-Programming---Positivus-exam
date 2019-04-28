@@ -1,4 +1,4 @@
-package no.alacho.something.fragments
+package no.alacho.positivity.fragments
 
 import android.Manifest
 import android.content.Context
@@ -13,7 +13,7 @@ import android.view.*
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.camera_layout.*
-import no.alacho.something.R
+import no.alacho.positivity.R
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
 import java.io.File

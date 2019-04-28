@@ -1,4 +1,4 @@
-package no.alacho.something.room
+package no.alacho.positivity.room
 
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData

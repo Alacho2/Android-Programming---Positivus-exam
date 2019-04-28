@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools" package="no.alacho.something">
+          xmlns:tools="http://schemas.android.com/tools" package="no.alacho.positivity">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.CAMERA"/>
@@ -17,7 +17,7 @@
         <meta-data
                 android:name="com.google.android.geo.API_KEY"
                 android:value="@string/google_maps_key"/>
-        <activity android:name=".MainActivity"  android:screenOrientation="portrait">
+        <activity android:name="no.alacho.positivity.MainActivity" android:screenOrientation="portrait">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

@@ -2,9 +2,9 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
             xmlns:tools="http://schemas.android.com/tools" android:id="@+id/nav_graph" app:startDestination="@id/posts">
-    <fragment android:id="@+id/posts" android:name="no.alacho.something.fragments.Posts" android:label="Posts">
+    <fragment android:id="@+id/posts" android:name="no.alacho.positivity.fragments.Posts" android:label="Posts">
         <action android:id="@+id/action_posts_to_createPostFragment" app:destination="@id/createPostFragment"/>
     </fragment>
-    <fragment android:id="@+id/createPostFragment" android:name="no.alacho.something.fragments.CreatePostFragment"
+    <fragment android:id="@+id/createPostFragment" android:name="no.alacho.positivity.fragments.CreatePostFragment"
               android:label="create_post_layout" tools:layout="@layout/create_post_layout"/>
 </navigation>

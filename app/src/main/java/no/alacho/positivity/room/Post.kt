@@ -1,4 +1,4 @@
-package no.alacho.something.room
+package no.alacho.positivity.room
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

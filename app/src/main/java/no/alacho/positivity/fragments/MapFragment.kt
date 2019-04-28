@@ -1,10 +1,8 @@
-package no.alacho.something.fragments
+package no.alacho.positivity.fragments
 
 import android.Manifest
 import android.content.Context
-import android.graphics.Bitmap
 import android.os.Bundle
-import android.os.Environment
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -13,29 +11,22 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.libraries.places.api.Places
-import com.google.android.libraries.places.api.model.Place
-import com.google.android.libraries.places.api.net.FetchPlaceRequest
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest
 import com.google.android.libraries.places.api.net.PlacesClient
 import kotlinx.android.synthetic.main.activity_maps.*
-import no.alacho.something.AutoCompleteAdapter
-import no.alacho.something.PermissionRequests
-import no.alacho.something.R
+import no.alacho.positivity.AutoCompleteAdapter
+import no.alacho.positivity.PermissionRequests
+import no.alacho.positivity.R
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
 import java.io.File
-import java.io.FileOutputStream
-import java.text.SimpleDateFormat
-import java.util.*
 
 class MapFragment : Fragment(), OnMapReadyCallback {
 

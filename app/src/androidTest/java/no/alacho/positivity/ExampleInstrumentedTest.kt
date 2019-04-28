@@ -1,4 +1,4 @@
-package no.alacho.something
+package no.alacho.positivity
 
 import androidx.test.InstrumentationRegistry
 import androidx.test.runner.AndroidJUnit4

@@ -24,8 +24,9 @@
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="8dp"
             app:layout_constraintHorizontal_bias="1.0"
-            android:textSize="15sp"
-            android:textColor="#000"/>
+            android:textSize="18sp"
+            android:textColor="#000"
+    android:paddingBottom="8dp"/>
 
     <ImageView
             android:layout_width="0dp"
