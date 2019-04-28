@@ -1,12 +1,15 @@
 package no.alacho.something
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import no.alacho.something.room.Post
 
@@ -24,9 +27,19 @@ class PostAdapter(context: Context?) : RecyclerView.Adapter<PostAdapter.PostView
 
     override fun onBindViewHolder(holder: PostAdapter.PostViewHolder, position: Int) {
       val current = posts[position]
-      val bitmap = BitmapFactory.decodeByteArray(current.image, 0, current.image!!.size)
+      val image = current.image!!
       holder.postTitle.text = current.name
-      holder.postImage.setImageBitmap(bitmap)
+      if(image.isNotEmpty()) {
+        val bitmap = BitmapFactory.decodeByteArray(current.image, 0, current.image.size)
+        val layoutParams = holder.postImage.layoutParams
+        layoutParams.width = 350
+        layoutParams.height = 350
+        holder.postImage.layoutParams = layoutParams
+        holder.postImage.setImageBitmap(bitmap)
+      } else {
+        holder.postImage.visibility = View.GONE
+        holder.postTitle.textSize = 22f
+      }
     }
 
   internal fun setPosts(posts: List<Post>) {

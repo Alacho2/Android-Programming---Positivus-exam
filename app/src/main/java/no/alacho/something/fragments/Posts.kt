@@ -13,24 +13,26 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.NavHostFragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.recyclyer.*
 import no.alacho.something.PostAdapter
 import no.alacho.something.R
 import java.util.*
 import kotlin.concurrent.timerTask
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import kotlinx.android.synthetic.main.recycler.*
+import no.alacho.something.room.Post
 
 class Posts : Fragment(), View.OnClickListener {
-  private lateinit var layoutManager: GridLayoutManager
+  private lateinit var layoutManager: StaggeredGridLayoutManager
   private lateinit var adapter: PostAdapter
   private lateinit var search: View
   private lateinit var postViewModel: PostViewModel
+  private lateinit var postList: List<Post>
 
 
 
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-    return inflater.inflate(R.layout.recyclyer, container, false)
+    return inflater.inflate(R.layout.recycler, container, false)
   }
 
   override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -43,6 +45,14 @@ class Posts : Fragment(), View.OnClickListener {
       override fun afterTextChanged(s: Editable?) {}
       override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
       override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+
+        if(s.isNotEmpty()){
+          val filterList = postList.filter {
+            it.name.contains(s)
+          }
+          adapter.setPosts(filterList)
+        }
+
         if (s.isEmpty() && searchBar.visibility == View.VISIBLE) {
           Timer().schedule(timerTask {
             activity!!.runOnUiThread {
@@ -51,25 +61,22 @@ class Posts : Fragment(), View.OnClickListener {
               fab.show()
               val imm = activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
               imm.hideSoftInputFromWindow(searchBar.windowToken, 0)
+              adapter.setPosts(postList)
             }
           }, 2000)
         }
       }
     })
 
-    layoutManager = GridLayoutManager(view?.context, 2)
+    layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
     postRecycler.layoutManager = layoutManager
     adapter = PostAdapter(view?.context)
     postRecycler.adapter = adapter
 
-
     postViewModel = ViewModelProviders.of(this).get(PostViewModel::class.java)
     postViewModel.allPosts.observe(this, Observer { posts ->
+      postList = posts
       adapter.setPosts(posts)
-      /*words.forEach {
-
-
-      } */
     })
   }
 
