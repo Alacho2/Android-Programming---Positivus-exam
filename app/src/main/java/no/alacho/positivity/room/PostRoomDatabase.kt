@@ -28,7 +28,7 @@ abstract class PostRoomDatabase : RoomDatabase() {
                     context.applicationContext,
                     PostRoomDatabase::class.java,
                     "word_database"
-                ).addCallback(WordDatabaseCallback(scope))
+                )//.addCallback(WordDatabaseCallback(scope))  Til debugging
                     .build()
                 INSTANCE = instance
                 return instance
